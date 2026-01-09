@@ -1,0 +1,9 @@
+Value VLAN_ID (\d+)
+Value VLAN_NAME (\S+)
+Value MEMBER (\S+)
+Value MODE (\S+)
+
+Start
+  ^\s*Name\s+VID\s+Member\s+Mode\s*$$ -> Next
+  ^\s*-+\s*$$ -> Next
+  ^\s*${VLAN_NAME}\s+${VLAN_ID}\s+${MEMBER}\s+${MODE}\s*$$ -> Record

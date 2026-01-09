@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Topology Viewer</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <link rel="stylesheet" href="static/css/topology.css">
+</head>
+<body>
+  <div id="network"></div>
+  <div id="side">
+    <h2>Topology</h2>
+    <p class="muted">
+      <b>Physical Port View:</b> All ports shown as square blocks. Click any node/edge to inspect details.<br/>
+      <span style="display: inline-block; width: 12px; height: 12px; background-color: #90EE90; border: 1px solid #228B22; margin: 0 2px 0 5px; vertical-align: middle;"></span> Green = up & connected<br/>
+      <span style="display: inline-block; width: 12px; height: 12px; background-color: #FFE4B5; border: 1px solid #228B22; margin: 0 2px 0 5px; vertical-align: middle;"></span> Yellow = up<br/>
+      <span style="display: inline-block; width: 12px; height: 12px; background-color: #FFB6C1; border: 1px solid #8B0000; margin: 0 2px 0 5px; vertical-align: middle;"></span> Pink = connected but down
+    </p>
+    
+    <h3>Layout Settings</h3>
+    <div style="margin-bottom: 15px;">
+      <label for="numberOfRowsSlider" style="display: block; margin-bottom: 5px;">
+        Number of Rows: <span id="numberOfRowsValue">2</span>
+      </label>
+      <input type="range" id="numberOfRowsSlider" min="1" max="4" value="2" 
+             style="width: 100%;" 
+             oninput="updateNumberOfRows(this.value)">
+      <div class="muted" style="font-size: 11px; margin-top: 3px;">
+        Adjust to change how many rows ports are distributed across
+      </div>
+    </div>
+    
+    <div id="warnings"></div>
+
+    <h3>Selection</h3>
+    <div id="selection" class="muted">Nothing selected.</div>
+
+    <h3>Device Ports</h3>
+    <div id="portList" class="muted">Click a device to list its linked ports.</div>
+  </div>
+
+<script>
+  // Python will replace this token with JSON
+  const DATA = {{PAYLOAD_JSON}};
+</script>
+<script src="static/js/topology.js"></script>
+</body>
+</html>

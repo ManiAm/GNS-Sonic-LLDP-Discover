@@ -1,0 +1,11 @@
+Value LocalPort (\S+)
+Value RemoteDevice (\S+)
+Value RemotePortID (\S+)
+Value Capability (\S+)
+Value RemotePortDescr (.*)
+
+Start
+  ^Capability codes -> Next
+  ^LocalPort -> Next
+  ^----------- -> Next
+  ^${LocalPort}\s+${RemoteDevice}\s+${RemotePortID}\s+${Capability}\s+${RemotePortDescr} -> Record

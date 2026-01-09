@@ -1,0 +1,16 @@
+Value Interface (\S+)
+Value Lanes ([\d,]+)
+Value Speed (\S+)
+Value MTU (\d+)
+Value FEC (\S+)
+Value Alias (\S+)
+Value Vlan (\S+)
+Value Oper (\S+)
+Value Admin (\S+)
+Value Type (\S+(?: \S+)*)
+Value AsymPFC (\S+)
+
+Start
+  ^\s*Interface\s+Lanes -> Next
+  ^\s*----------- -> Next
+  ^\s*${Interface}\s+${Lanes}\s+${Speed}\s+${MTU}\s+${FEC}\s+${Alias}\s+${Vlan}\s+${Oper}\s+${Admin}\s+${Type}\s+${AsymPFC} -> Record
