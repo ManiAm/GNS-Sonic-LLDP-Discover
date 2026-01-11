@@ -63,3 +63,12 @@ def get_default_devices():
             ssh_config_file="/home/maniam/.ssh/config"
         )
     ]
+
+    # return [
+    #     DeviceConfig(
+    #         host='sonic1-snake',
+    #         username='admin',
+    #         password='YourPaSsWoRd',
+    #         ssh_config_file="/home/maniam/.ssh/config"
+    #     )
+    # ]

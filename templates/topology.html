@@ -12,9 +12,10 @@
     <h2>Topology</h2>
     <p class="muted">
       <b>Physical Port View:</b> All ports shown as square blocks. Click any node/edge to inspect details.<br/>
-      <span style="display: inline-block; width: 12px; height: 12px; background-color: #90EE90; border: 1px solid #228B22; margin: 0 2px 0 5px; vertical-align: middle;"></span> Green = up & connected<br/>
-      <span style="display: inline-block; width: 12px; height: 12px; background-color: #FFE4B5; border: 1px solid #228B22; margin: 0 2px 0 5px; vertical-align: middle;"></span> Yellow = up<br/>
-      <span style="display: inline-block; width: 12px; height: 12px; background-color: #FFB6C1; border: 1px solid #8B0000; margin: 0 2px 0 5px; vertical-align: middle;"></span> Pink = connected but down
+      <span style="display: inline-block; width: 12px; height: 12px; background-color: #90EE90; border: 1px solid #228B22; margin: 0 2px 0 5px; vertical-align: middle;"></span> Green = up with LLDP neighbor<br/>
+      <span style="display: inline-block; width: 12px; height: 12px; background-color: #FFE4B5; border: 1px solid #228B22; margin: 0 2px 0 5px; vertical-align: middle;"></span> Yellow = up but no LLDP neighbors<br/>
+      <span style="display: inline-block; width: 12px; height: 12px; background-color: #FFB6C1; border: 1px solid #8B0000; margin: 0 2px 0 5px; vertical-align: middle;"></span> Pink = connected but not up<br/>
+      <span style="display: inline-block; width: 12px; height: 12px; background-color: #cccccc; border: 1px solid #666; margin: 0 2px 0 5px; vertical-align: middle;"></span> Gray = neither up nor connected
     </p>
     
     <h3>Layout Settings</h3>

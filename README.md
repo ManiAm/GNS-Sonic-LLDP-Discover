@@ -154,14 +154,18 @@ Open the [config.py](./config.py) file and ensure that all SONiC devices you wan
 
     python3 main.py
 
-The program connects to each SONiC device sequentially and retrieves LLDP neighbor information from every node. Using this data, it constructs a logical and physical topology and generates an interactive HTML visualization (`topology.html`). You can open the generated file in any modern web browser. The resulting topology is fully interactive:
+The program connects to each SONiC device sequentially and retrieves LLDP neighbor information from every node. Using this data, it constructs a logical and physical topology and generates an interactive HTML visualization (`topology.html`). You can open the generated file in any modern web browser. The resulting topology is interactive:
 
 - Zoom and pan to explore the network at different levels
 - Click on a device to expand and view its connected ports
 - Click on a port to highlight its link and remote endpoint
 - Click on a link to highlight both endpoint ports and inspect link metadata
 
-Each port is color-coded based on its operational state, allowing you to quickly identify link health and connectivity issues. The visualization is implemented using the `vis-network` JavaScript library, which provides an efficient, scalable graph engine with support for large topologies, dynamic layouts, and interactive inspection.
+Each port is color-coded, allowing you to quickly identify link health and connectivity issues.
+
+<img src="pics/port_colors.png" alt="segment" width="250">
+
+The visualization is implemented using the `vis-network` JavaScript library, which provides an efficient, scalable graph engine with support for large topologies, dynamic layouts, and interactive inspection.
 
 <img src="pics/topo_html.png" alt="segment" width="1000">
 
