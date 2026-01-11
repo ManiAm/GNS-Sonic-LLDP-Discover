@@ -13,9 +13,9 @@ Note that LLDP only works on `admin-up` interfaces. Even though LLDP is enabled 
 
 ## GNS3 Lab Topology
 
-Create the following topology consisting of three sonic nodes inside GNS3:
+Create the following topology consisting of four sonic nodes inside GNS3:
 
-<img src="pics/lldp-gns3-topo.png" alt="segment" width="450">
+<img src="pics/lldp-gns3-topo.png" alt="segment" width="600">
 
 The management-host is a Docker container that is built on Ubuntu 20.04.2 LTS. In our topology, it is configured to serve as a dedicated DHCP server. Refer to [here](https://github.com/ManiAm/GNS-Bench/blob/master/docs/Management_host.md) to learn how to set it up.
 
@@ -40,12 +40,13 @@ LLDP data is stored in `STATE_DB`, and CLIs above read from the DB (not directly
     -----------  --------------  -----------------  ------------  -----------------
     Ethernet0    sonic3          fortyGigE0/4       BR            Ethernet4
     Ethernet4    sonic2          fortyGigE0/8       BR            Ethernet8
-    eth0         sonic3          0c:86:68:13:00:00  BR            eth0
+    eth0         sonic4          0c:69:cf:50:00:00  BR            eth0
     eth0         sonic2          0c:22:21:ac:00:00  BR            eth0
+    eth0         sonic3          0c:86:68:13:00:00  BR            eth0
     --------------------------------------------------
-    Total entries displayed:  4
+    Total entries displayed:  5
 
-Note that `sonic1` sees two neighbors (`sonic2` and `sonic3`) on its eth0 interface. This is due to GNS3 ethernet switch limitation that simply floods LLDP frames out of all ports. This would never happen on a real switch.
+Note that `sonic1` sees three neighbors (`sonic2`, `sonic3` and `sonic4`) on its eth0 interface. This is due to GNS3 ethernet switch limitation that simply floods LLDP frames out of all ports. This would never happen on a real switch.
 
 ### Interface Naming and Mapping
 
@@ -134,6 +135,11 @@ Host sonic3-lldp
     HostName 10.10.10.101
     User admin
     ProxyJump mgmt-host-lldp
+
+Host sonic4-lldp
+    HostName 10.10.10.103
+    User admin
+    ProxyJump mgmt-host-lldp
 ```
 
 Make sure to setup passwordless SSH access to both `gns3-vm-lldp` and `mgmt-host-lldp`. Once this configuration is in place, you can access any of the sonic devices using a single command:
@@ -167,9 +173,42 @@ During execution, you may see messages similar to the following printed in the t
 
 ```text
 NOTE: Shared-segment / flooded LLDP detected:
-  - sonic1:eth0 sees multiple neighbors (sonic2:eth0, sonic3:eth0)
-  - sonic2:eth0 sees multiple neighbors (sonic1:eth0, sonic3:eth0)
-  - sonic3:eth0 sees multiple neighbors (sonic1:eth0, sonic2:eth0)
+  - sonic1:eth0 sees multiple neighbors (sonic2:eth0, sonic3:eth0, sonic4:eth0)
+  - sonic2:eth0 sees multiple neighbors (sonic1:eth0, sonic3:eth0, sonic4:eth0)
+  - sonic3:eth0 sees multiple neighbors (sonic1:eth0, sonic2:eth0, sonic4:eth0)
+  - sonic4:eth0 sees multiple neighbors (sonic1:eth0, sonic2:eth0, sonic3:eth0)
 ```
 
 This indicates that, based on LLDP data, a single local port is receiving advertisements from multiple remote devices. This typically occurs when devices are connected through a Layer-2 segment that floods LLDP frames. Rather than incorrectly representing these connections as point-to-point links, the visualizer models them using a dedicated SEG (segment) node. This makes shared media explicit in the topology and avoids misleading direct links between devices.
+
+## Physical Loopback
+
+A physical loopback is created by physically connecting two ports on the same device using an external medium typically a copper or fiber cable. From the device’s perspective, traffic transmitted out of one port immediately re-enters the device through another port. This is different from a logical or internal loopback (which is implemented in software or ASIC microcode). A physical loopback exercises the real, external datapath: port PHYs, MACs, serdes, cabling, and ingress/egress pipelines. Physical loopbacks are commonly used for:
+
+- **Dataplane validation**: Verifies that packets can exit one port, traverse a physical link, and re-enter another port.
+- **Snake testing**: Enables chained forwarding paths without requiring multiple external devices.
+- **SerDes testing**: Confirms correct operation of the physical interface, not just internal forwarding logic.
+- **Troubleshooting**: Helps isolate whether issues originate in the ASIC, the port hardware, or the external link.
+
+In GNS3, you generally cannot directly connect two interfaces of the same virtual device. The simulator enforces a topology model where links are always formed between distinct nodes. A common workaround is to introduce a simple intermediary device like a hub to connect two ports of the same device. Logically, this creates a loopback path:
+
+    Switch Port A → Hub → Switch Port B
+
+When a switch has a physical loopback, LLDP reports each port as the neighbor of the other. From LLDP’s point of view, there is no concept of self-awareness; it simply advertises and receives neighbor information on each interface. Here is a sample LLDP output on `sonic4`:
+
+    admin@sonic4:~$ show lldp table
+
+    Capability codes: (R) Router, (B) Bridge, (O) Other
+    LocalPort    RemoteDevice    RemotePortID       Capability    RemotePortDescr
+    -----------  --------------  -----------------  ------------  -----------------
+    Ethernet0    sonic4          fortyGigE0/20      BR            Ethernet20   <---------------
+    Ethernet20   sonic4          fortyGigE0/0       BR            Ethernet0    <---------------
+    eth0         sonic2          0c:22:21:ac:00:00  BR            eth0
+    eth0         sonic3          0c:86:68:13:00:00  BR            eth0
+    eth0         sonic1          0c:b3:38:a8:00:00  BR            eth0
+    --------------------------------------------------
+    Total entries displayed:  5
+
+The visualizer displays a link between two ports on the same switch. This is expected behavior and indicates a self-loop via an external medium, not an internal wiring error. Such visual output is a useful confirmation that the loopback path is correctly formed and visible at Layer 2.
+
+<img src="pics/physical_loopback.png" alt="segment" width="1000">

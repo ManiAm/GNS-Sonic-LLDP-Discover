@@ -55,5 +55,11 @@ def get_default_devices():
             username='admin',
             password='YourPaSsWoRd',
             ssh_config_file="/home/maniam/.ssh/config"
+        ),
+        DeviceConfig(
+            host='sonic4-lldp',
+            username='admin',
+            password='YourPaSsWoRd',
+            ssh_config_file="/home/maniam/.ssh/config"
         )
     ]
