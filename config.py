@@ -37,6 +37,22 @@ def get_default_devices():
         List of DeviceConfig objects for default devices.
     """
 
+    dev_list = _get_default_devices()
+
+    # Check for duplicates based on host
+    hosts = [device.host for device in dev_list]
+    duplicates = [host for host in hosts if hosts.count(host) > 1]
+
+    if duplicates:
+        unique_duplicates = list(set(duplicates))
+        raise ValueError(f"Duplicate device hosts found: {', '.join(unique_duplicates)}")
+
+    return dev_list
+
+
+def _get_default_devices():
+
+    # LLDP topology
     return [
         DeviceConfig(
             host='sonic1-lldp',
@@ -64,6 +80,7 @@ def get_default_devices():
         )
     ]
 
+    # snake test (single DUT)
     # return [
     #     DeviceConfig(
     #         host='sonic1-snake',
@@ -72,3 +89,21 @@ def get_default_devices():
     #         ssh_config_file="/home/maniam/.ssh/config"
     #     )
     # ]
+
+    # snake test (dual DUT)
+    # devices = [
+    #     DeviceConfig(
+    #         host='sonic1-snake-dual',
+    #         username='admin',
+    #         password='YourPaSsWoRd',
+    #         ssh_config_file="/home/maniam/.ssh/config"
+    #     ),
+    #     DeviceConfig(
+    #         host='sonic2-snake-dual',
+    #         username='admin',
+    #         password='YourPaSsWoRd',
+    #         ssh_config_file="/home/maniam/.ssh/config"
+    #     )
+    # ]
+
+    return devices
