@@ -91,7 +91,7 @@ def _get_default_devices():
     # ]
 
     # snake test (dual DUT)
-    # devices = [
+    # return [
     #     DeviceConfig(
     #         host='sonic1-snake-dual',
     #         username='admin',
@@ -105,5 +105,3 @@ def _get_default_devices():
     #         ssh_config_file="/home/maniam/.ssh/config"
     #     )
     # ]
-
-    return devices
