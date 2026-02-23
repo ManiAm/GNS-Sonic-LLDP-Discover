@@ -3,13 +3,10 @@
 
 LLDP Topology Visualizer is a lightweight tool for discovering and visualizing physical and logical network topology in SONiC-based environments using LLDP data. It connects to multiple SONiC devices, collects LLDP neighbor information, normalizes the results into a topology-aware graph, and renders an interactive HTML visualization that allows operators to inspect devices, ports, and links at varying levels of detail. The visualizer is designed to work cleanly in both real hardware and lab environments (such as GNS3). The resulting topology provides an intuitive, scalable view of port-level relationships, link state, and neighbor mappings, making it suitable for troubleshooting, validation, and lab exploration.
 
-Refer to [LLDP guide](./README_LLDP.md) for more detailed information.
+Refer to the following guides for more detailed information:
 
-## LLDP Architecture in SONiC
-
-SONiC implements LLDP as a dedicated Docker-based service. LLDP runs inside a container named `lldp`, which hosts `lldpd`, a widely used, standards-compliant open-source LLDP daemon for Linux systems. This container is responsible for all LLDP protocol operations on the device, including the transmission and reception of LLDP frames, TLV processing, and the publication of neighbor information to SONiC's internal state database (STATE_DB).
-
-Note that LLDP only works on `admin-up` interfaces. Even though LLDP is enabled globally, if an interface is `admin-down`, LLDP will not transmit or receive. If there is no physical link, LLDP frames won’t be exchanged. Also note that LLDP operates entirely at Layer 2 (Ethernet). It is carried directly in Ethernet frames and does not use IP, TCP, or UDP. Because of this, you do not need IPv4 or IPv6 addresses. Moreover, you do not need VLAN or forwarding configuration.
+- [LLDP Introduction](./README_LLDP.md)
+- [LLDP Architecture in Sonic](./README_LLDP_Sonic.md)
 
 ## GNS3 Lab Topology
 
@@ -64,7 +61,7 @@ admin@sonic2:~$ show interfaces status
  Ethernet16      45,46,47,48      40G   9100    N/A   fortyGigE0/16  routed    down       up     N/A         N/A
  Ethernet20      41,42,43,44      40G   9100    N/A   fortyGigE0/20  routed    down       up     N/A         N/A
 ```
-- **Ethernet`X`** (SONiC's logical interface name)
+- **EthernetX** (SONiC's logical interface name)
 
     These are SONiC's logical front-panel ports. They are:
 
@@ -96,7 +93,7 @@ admin@sonic2:~$ show interfaces status
     - Match front-panel labels
     - Improve readability for operators
 
-- **e`X`** (QEMU virtual NICs)
+- **eX** (QEMU virtual NICs)
 
     In GNS3, when SONiC runs inside QEMU, each virtual network adapter is named something like `e0`, `e1`, `e2`. They represent virtual ethernet devices attached to the VM. You generally do not configure these directly inside SONiC. The GNS3 GUI uses these virtual NICs naming. This is expected behavior and often a source of confusion for new users. You must know which GNS3 `eX` interface corresponds to which `EthernetX` port in SONiC in order to cable the topology correctly.
 
