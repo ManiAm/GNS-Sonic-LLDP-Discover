@@ -13,6 +13,19 @@ Within the LLDP container, three primary daemons operate together to provide ful
 - `lldp_syncd`
 - `lldpmgrd`
 
+```bash
+admin@sonic:~$ docker exec -it lldp bash
+
+root@sonic:/# ps -aux
+
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+
+_lldpd        28  0.0  0.0  20476  6724 pts/0    S    17:43   0:00 lldpd: monitor.
+_lldpd        30  0.0  0.0  21272  3672 pts/0    S    17:43   0:13 lldpd: no neighbor.
+root          34  0.0  0.0 116040 26976 pts/0    Sl   17:43   0:01 python3 -m lldp_syncd
+root          38  0.0  0.0  48832 31508 pts/0    S    17:43   0:00 python3 /usr/bin/lldpmgrd
+```
+
 <img src="pics/lldp_sonic.png" alt="segment" width="450">
 
 ### lldpd (The Protocol Engine)
